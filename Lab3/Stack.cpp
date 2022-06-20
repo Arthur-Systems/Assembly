@@ -24,31 +24,29 @@ int stack[10];
 
 void push(int data)
 {
-    if (top == MAX_SIZE - 1)
+    if (top != MAX_SIZE - 1)
     {
-        cout << "Stack is full pushed data will be ignored" << endl;
-        return;
+        top++;
+        stack[top] = data;
     }
-    top++;
-    stack[top] = data;
 }
 
-void pop()
+int pop()
 {
-    if (top < 0)
+    if (top == -1)
     {
-        cout << "Stack is empty" << endl;
-        return;
+        return 0;
     }
+    int data = stack[top];
     top--;
+    return data;
 }
 
-void peek()
+int peek()
 {
-    if (top < 0)
+    if (top == -1)
     {
-        cout << "Stack is empty" << endl;
-        return;
+        return 0;
     }
-    cout << "The top element is " << stack[top] << endl;
+    return stack[top];
 }

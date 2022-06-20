@@ -29,7 +29,7 @@ int main()
     cout << "3.peek" << endl;
     cout << "4.exit" << endl;
 
-    int choice, data, count;
+    int choice, data, count = 0;
     cin >> choice;
     if (cin.fail())
     {
@@ -48,6 +48,12 @@ int main()
             {
                 cout << "Enter Data: (-1 to exit)" << endl;
                 cin >> data;
+                count++;
+                if (count > 10)
+                {
+                    cout << "Stack is full!" << endl;
+                    break;
+                }
                 if (cin.fail())
                 {
                     cin.clear();
@@ -59,7 +65,6 @@ int main()
                     break;
                 }
                 push(data);
-                count++;
             }
             break;
         case 2:
@@ -74,23 +79,23 @@ int main()
             {
                 for (int i = 0; i < data; i++)
                 {
-                    peek();
-                    cout << "Popping Data!" << endl;
-                    pop();
+                    cout << "The value being popped is " << pop() << endl;
                 }
                 break;
             }
-            if (data > count)
+            if (data > 10)
             {
-                cout << "Stack is too small to pop " << count << " elements" << endl;
+                cout << "The amount of data you entered is too large" << endl;
+                break;
             }
             else
             {
                 cout << "ERROR!!! Can not remove that amount, try again." << endl;
+                break;
             }
             break;
         case 3:
-            peek();
+            cout << "The Top Most Layer Of The Stack Is: " << peek() << endl;
             break;
 
         default:
@@ -127,19 +132,28 @@ choose the option you want to do:
 Please Enter Numbers To Push Into Stack
 Enter -1 To Stop Entering
 Enter Data: (-1 to exit)
+5
+Enter Data: (-1 to exit)
+64
+Enter Data: (-1 to exit)
 34
 Enter Data: (-1 to exit)
-54
+678
 Enter Data: (-1 to exit)
-24
+43
 Enter Data: (-1 to exit)
-35
+654
 Enter Data: (-1 to exit)
 23
 Enter Data: (-1 to exit)
-76
+65
 Enter Data: (-1 to exit)
--1
+457
+Enter Data: (-1 to exit)
+4
+Enter Data: (-1 to exit)
+0
+Stack is full!    //! Stack was full so this number was ignored
 choose the option you want to do:
 1.push
 2.pop
@@ -148,7 +162,7 @@ choose the option you want to do:
 3
 
 
-The top element is 76  //! This is the correct expected output
+The Top Most Layer Of The Stack Is: 4
 choose the option you want to do:
 1.push
 2.pop
@@ -158,17 +172,13 @@ choose the option you want to do:
 
 
 Enter The Amount Of Data You Want To Pop
-5
-The top element is 76
-Popping Data!
-The top element is 23
-Popping Data!
-The top element is 35
-Popping Data!
-The top element is 24
-Popping Data!
-The top element is 54
-Popping Data!
+6
+The value being popped is 4
+The value being popped is 457
+The value being popped is 65
+The value being popped is 23
+The value being popped is 654
+The value being popped is 43
 choose the option you want to do:
 1.push
 2.pop
@@ -177,7 +187,27 @@ choose the option you want to do:
 3
 
 
-The top element is 34 //! This is the correct expected output
+The Top Most Layer Of The Stack Is: 678 //! This was the expected output :)
+choose the option you want to do:
+1.push
+2.pop
+3.peek
+4.exit
+2
+
+
+Enter The Amount Of Data You Want To Pop
+1
+The value being popped is 678
+choose the option you want to do:
+1.push
+2.pop
+3.peek
+4.exit
+3
+
+
+The Top Most Layer Of The Stack Is: 34 //! This was the expected output :)
 choose the option you want to do:
 1.push
 2.pop
@@ -187,4 +217,5 @@ choose the option you want to do:
 
 
 arthur@Haichuans-MBP lab3 %
+
 */

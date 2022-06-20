@@ -25,7 +25,7 @@
 using namespace std;
 
 void push(int data);
-void pop();
-void peek();
+int pop();
+int peek();
 
 #endif // ! _STACK_HEAD_H_
