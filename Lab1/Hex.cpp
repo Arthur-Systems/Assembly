@@ -2,8 +2,10 @@
  * @file main.cpp
  * @author Arthur Wei
  * @brief This is the file with the prototype definitions of the functions.
- * @version 1
+ * @version Lab 1--Printing a hex number as binary
  * @date 2022-06-14
+ * @function convertHtoB converts the hexadecimal number to binary. By breaking the inputted string into individual characters and then converting each character to its binary equivalent.
+ *
  *
  * @param hexadecimal the hexadecimal input from the user
  * @return hexadecimal
@@ -12,19 +14,12 @@
  * @copyright Copyright (c) 2022
  *
  */
-#include "head.h"
+#include "HexHead.h"
 
-void setHexadecimal()
+string convertHtoB(string hexadecimal)
 {
-    cout << "Please enter a number in hexadecimal: ";
-    string hexadecimal;
-    cin >> hexadecimal;
-    convertHtoB(hexadecimal);
-}
+    string binary = " ";
 
-void convertHtoB(string hexadecimal)
-{
-    string binary = "";
     for (int i = 0; i < hexadecimal.length(); i++)
     {
         switch (hexadecimal[i])
@@ -78,14 +73,10 @@ void convertHtoB(string hexadecimal)
             binary += "1111";
             break;
         default:
-            cout << "You Entered An Invalid Number" << endl;
-            return;
+            cout << "You Entered An Invalid HEX, Clearing!" << endl;
+            binary = " ";
+            break;
         }
     }
-    printBinary(binary);
-}
-
-void printBinary(string binary)
-{
-    cout << "The number in binary is: " << binary << endl;
+    return binary;
 }

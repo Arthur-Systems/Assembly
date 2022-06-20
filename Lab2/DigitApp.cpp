@@ -1,8 +1,8 @@
 /**
  * @file DigitApp.cpp
- * @author Haichuan Wei  (arthur.wei50@gmail.com)
- * @brief This is the main file of the DigitApp. It contains the main function. The program will ask the user to input a integer and then call a function to print each ditgit of the integer.
- * @version 1
+ * @author Haichuan Wei  (Arthur)
+ * @brief  The program will ask the user to input a integer and then passes it to the SplitNumber Function(see DigitPrt.cpp) and then call a function to print each digit of the integer.
+ * @version Lab 2-Printing an integer in digits
  * @date 2022-06-15
  *
  * @copyright Copyright (c) 2022
@@ -21,3 +21,20 @@ int main()
     splitNumber(number);
     return 0;
 }
+
+/*
+!Confirmation of the program:
+
+arthur@Haichuans-MBP lab2 % make run
+./mainapp
+                  Program created by Arthur Wei :)
+Enter A Number For It To Split Up.
+69054                               //* This is the number that I want to split up
+Digit # 1: 6
+Digit # 2: 9
+Digit # 3: 0
+Digit # 4: 5
+Digit # 5: 4
+arthur@Haichuans-MBP lab2 %
+
+*/

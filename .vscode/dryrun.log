@@ -1,0 +1,6 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory `/Users/arthur/Documents/GitHub/Assembly'
+make: Leaving directory `/Users/arthur/Documents/GitHub/Assembly'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+

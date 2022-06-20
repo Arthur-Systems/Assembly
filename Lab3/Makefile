@@ -2,9 +2,9 @@ CXX = g++
 CXXFLAGS = -Wall -Werror -Wextra -pedantic -std=c++20 -g -fsanitize=address
 LDFLAGS =  -fsanitize=address
 
-SRC = Hex.cpp HexApp.cpp
+SRC = Stack.cpp StackApp.cpp
 OBJ = $(SRC:.cc=.o)
-EXEC = mainapp
+EXEC = Stack
 
 all: $(EXEC)
 
