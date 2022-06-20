@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Sun Jun 19 23:46:43 2022
+# Make data base, printed on Mon Jun 20 00:43:49 2022
 
 # Variables
 
@@ -19,7 +19,6 @@ make: *** No rule to make target `all'.  Stop.
 # automatic
 ?F = $(notdir $?)
 # environment
- 
 VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
@@ -42,7 +41,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/h2/0k5cwgfd34x02pn6l8gjxl080000gn/T/vscode-ipc-449e4147-3932-4377-b097-3ec506a49e5a.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/h2/0k5cwgfd34x02pn6l8gjxl080000gn/T/vscode-ipc-8258a8b3-7ef3-4062-8571-e1ce7e81df5d.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -149,7 +148,6 @@ VSCODE_PID = 5139
 # No pattern-specific variable values.
 
 # Directories
- 
 
 # . (device 16777220, inode 7722433): 9 files, no impossibilities.
 
@@ -225,6 +223,6 @@ GNUmakefile:
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Sun Jun 19 23:46:43 2022
+# Finished Make data base on Mon Jun 20 00:43:49 2022
 
  
