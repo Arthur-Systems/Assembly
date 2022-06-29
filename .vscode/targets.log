@@ -7,7 +7,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 
 # This program built for i386-apple-darwin11.3.0
 
-# Make data base, printed on Fri Jun 24 03:16:22 2022
+# Make data base, printed on Tue Jun 28 20:16:50 2022
 
 # Variables
 
@@ -15,10 +15,6 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
-# makefile (from `Makefile', line 10)
-OBJ = $(SRC:.cc=.o)
-# makefile (from `Makefile', line 9)
-SRC = 
 # environment
 VSCODE_LOG_NATIVE = false
 # automatic
@@ -29,24 +25,20 @@ VSCODE_LOG_NATIVE = false
 @F = $(notdir $@)
 # makefile
 CURDIR := /Users/arthur/Documents/GitHub/Assembly
-# makefile (from `Makefile', line 5)
-LINK = ld
 # makefile
 SHELL = /bin/sh
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en","availableLanguages":{},"_languagePackSupport":true}
 # environment
 _ = /usr/bin/make
-# makefile (from `Makefile', line 1)
-MAKEFILE_LIST :=  Makefile
-# makefile (from `Makefile', line 2)
-CXXFLAGS = -m32 -g 
+# makefile
+MAKEFILE_LIST := 
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/h2/0k5cwgfd34x02pn6l8gjxl080000gn/T/vscode-ipc-baef326f-7552-4f4f-be43-4bb923595a94.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/h2/0k5cwgfd34x02pn6l8gjxl080000gn/T/vscode-ipc-5ef442de-3231-4db3-b525-4bea5d3ec7d0.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -55,12 +47,10 @@ PATH = /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
-# makefile (from `Makefile', line 3)
-LDFLAGS = 
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.k8TDngbyra/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.01J3X7SomA/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -93,18 +83,12 @@ MAKE = $(MAKE_COMMAND)
 MAKECMDGOALS := all
 # environment
 SHLVL = 1
-# makefile (from `Makefile', line 6)
-LINKFLAGS = -macosx_version_min 10.7 -no_pie 
-# makefile (from `Makefile', line 12)
-EXEC = Assembler
 # default
 MAKE_VERSION := 3.81
 # environment
 USER = arthur
 # makefile
-.DEFAULT_GOAL := all
-# makefile (from `Makefile', line 11)
-ENTRY = _main
+.DEFAULT_GOAL := 
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # default
@@ -137,8 +121,6 @@ COMMAND_MODE = unix2003
 MAKEFILES := 
 # automatic
 <F = $(notdir $<)
-# makefile (from `Makefile', line 1)
-CXX = as
 # environment
 LC_ALL = C
 # automatic
@@ -154,9 +136,9 @@ GPG_TTY = not a tty
 # environment
 LANG = C
 # environment
-VSCODE_PID = 758
+VSCODE_PID = 1204
 # variable set hash-table stats:
-# Load=72/1024=7%, Rehash=0, Collisions=4/107=4%
+# Load=63/1024=6%, Rehash=0, Collisions=1/84=1%
 
 # Pattern-specific Variable Values
 
@@ -164,9 +146,9 @@ VSCODE_PID = 758
 
 # Directories
 
-# . (device 16777220, inode 7722433): 18 files, no impossibilities.
+# . (device 16777220, inode 7722433): 13 files, no impossibilities.
 
-# 18 files, no impossibilities in 1 directories.
+# 13 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -174,22 +156,14 @@ VSCODE_PID = 758
 
 # Files
 
-link:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  commands to execute (from `Makefile', line 20):
-	$(LINK) $(LINKFLAGS) -e $(ENTRY) $(OBJ) -o $(EXEC)
-	
-
-all: Assembler
+# Not a target:
+all:
 #  Command-line target.
 #  Implicit rule search has been done.
 #  File does not exist.
-#  File has been updated.
-#  Needs to be updated (-q is set).
+#  File has not been updated.
 # variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/7=0%
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
 .SUFFIXES:
@@ -199,40 +173,23 @@ all: Assembler
 
 # Not a target:
 Makefile:
+#  A default, MAKEFILES, or -include/sinclude makefile.
 #  Implicit rule search has been done.
-#  Last modified 2022-06-24 03:06:48
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Failed to be updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
-Assembler:
-#  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `'
+# Not a target:
+makefile:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
-#  Needs to be updated (-q is set).
-# automatic
-# @ := Assembler
-# automatic
-# % := 
-# automatic
-# * := 
-# automatic
-# + := 
-# automatic
-# | := 
-# automatic
-# < := 
-# automatic
-# ^ := 
-# automatic
-# ? := 
+#  Failed to be updated.
 # variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=3/16=19%
-#  commands to execute (from `Makefile', line 17):
-	$(CXX) $(LDFLAGS) -o $@ $(OBJ) $(LBLIBS)
-	
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
 .DEFAULT:
@@ -240,29 +197,31 @@ Assembler:
 #  Modification time never checked.
 #  File has not been updated.
 
-clean:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  commands to execute (from `Makefile', line 24):
-	rm -rf $(OBJ) $(EXEC)
-	#ld -macosx_version_min 10.7 -no_pie -e _main hello.obj -o foo
-	# as -m32 -g -o hello.obj -c samp-raw.asm 
-	
+# Not a target:
+GNUmakefile:
+#  A default, MAKEFILES, or -include/sinclude makefile.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # files hash-table stats:
-# Load=7/1024=1%, Rehash=0, Collisions=0/22=0%
+# Load=6/1024=1%, Rehash=0, Collisions=0/17=0%
 # VPATH Search Paths
 
 # No `vpath' search paths.
 
 # No general (`VPATH' variable) search path.
 
-# # of strings in strcache: 1
-# # of strcache buffers: 1
-# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
-# strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
+# # of strings in strcache: 0
+# # of strcache buffers: 0
+# strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
+# strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Fri Jun 24 03:16:22 2022
+# Finished Make data base on Tue Jun 28 20:16:50 2022
 
  
+make: *** No rule to make target `all'.  Stop.
+
