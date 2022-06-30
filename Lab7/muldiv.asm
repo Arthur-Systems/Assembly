@@ -24,7 +24,8 @@ _start:
     divw sourceWord
 
     movl opLong, %eax
-    movl opLong, %edx
+    movl opLong, %  edx
     divl sourceLong
 
 done: 
+

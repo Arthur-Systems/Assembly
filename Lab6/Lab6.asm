@@ -14,8 +14,8 @@
 
 
 .data 
-    count:
-        .long 0
+ 
+
 .text
     .globl _start
     _start:
@@ -24,28 +24,16 @@
     movl $10, %ebx # Set the end value 
     movl $0, %ecx 
 
-loop_1:
-    cmpl %ebx, %eax
-    jge loop_2
+loop1:
+    cmpl %eax, %ebx
+    jge loop2
     jmp done
 
-loop_2:
-    movl (%eax), %ecx
+loop2:
+    movl %eax, %ecx
     inc %eax
-    jmp loop_1
+    jmp loop1
 
 done: 
     nop
-    nop
-
-
-
-
-    
-    
-
-
-
-
-    
     
