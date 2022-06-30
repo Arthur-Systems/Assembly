@@ -1,0 +1,34 @@
+# Program Output 
+    
+    
+Starting program: /home/arthur/Assembly/Lab6/a.out 
+
+Breakpoint 1, _start () at Lab6.asm:21
+warning: Source file is more recent than executable.
+21          movl $0, %eax  # Set the start value
+(gdb) n
+22          movl $10, %ebx # Set the end value 
+(gdb) n
+loop1 () at Lab6.asm:25
+25          cmpl %eax, %ebx
+(gdb) n
+26          jg loop2    # If eax is less than ebx, jump to loop2
+(gdb) n
+loop2 () at Lab6.asm:30
+30          inc %eax     # add 1 to the start value
+(gdb) n
+31          jmp loop1
+(gdb) n
+loop1 () at Lab6.asm:25
+25          cmpl %eax, %ebx
+(gdb) p $eax
+$1 = 1                         <---- After the first loop of counting eax has the value of 1 this will Continue until it equals the end value.
+(gdb) b done
+Breakpoint 2 at 0x401014: file Lab6.asm, line 34.
+(gdb) c
+Continuing.
+
+Breakpoint 2, done () at Lab6.asm:34
+34          nop         # nop is a no-operation instruction.
+(gdb) p $eax
+$2 = 10                      <----- After all the loops the start reg is value is now equal to the end value and the program is finished 
