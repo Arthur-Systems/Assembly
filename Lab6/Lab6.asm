@@ -22,20 +22,20 @@
 
     movl $0, %eax  # Set the start value
     movl $10, %ebx # Set the end value 
-    movl $count, %ecx
+    movl $0, %ecx 
 
 loop_1:
     cmpl %ebx, %eax
     jge loop_2
     jmp done
+
 loop_2:
     movl (%eax), %ecx
-    addl $4, %ecx
     inc %eax
     jmp loop_1
 
 done: 
-    movl %ecx, %ebx
+    nop
     nop
 
 
