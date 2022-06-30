@@ -9,11 +9,9 @@
 # ! Registers
 
 # ebx - The addition register. It stores the numbers that has already been added.
-# ecx - The stack pointer, which points to the address of the lable X. 
+# ecx - 
 
-
-
-.data 
+.data
  
 
 .text
@@ -36,4 +34,7 @@ loop2:
 
 done: 
     nop
+    nop
+
+    # Program Output 
     
