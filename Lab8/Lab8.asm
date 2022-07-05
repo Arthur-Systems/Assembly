@@ -8,22 +8,21 @@
 
 # ! Registers
 
-#
-.data 
-    binary:
-        .word 0b10101010
+.data     # Define Variables
+    start:
+        .word 0b111111
+   
+
     end:
         .word 0
-    
 
 .text 
     .globl _main
+     
     _main:
-
-    movw $binary, %ax
-    OR $0xFFF, %ax
-  
-
+    movw $0b1010101010101010, %ax
+    xorw $0xffff, %ax
+    
 done:
     movw %ax, %bx
     nop
