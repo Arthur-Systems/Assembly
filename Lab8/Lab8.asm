@@ -1,10 +1,10 @@
 
 # @file Lab8.asm
- # @author Arthur Wei  
- # @version Lab 8
- # @date 2022-07-09
+# @author Arthur Wei  
+# @version Lab 8
+# @date 2022-07-09
 
- # @brief This program transfers binary data from one register to another one by one. 
+# @brief This program transfers binary data from one register to another one by one. 
 
 # ! Register Use List
 # ax - ax is the source register where the start binary data is stored. It will later be copyed to the destination register
@@ -22,8 +22,8 @@
     .globl _main
      
     _main:
-        movw start, %ax # Load start into ax
-        movw mask, %dx  # Load the value in the lable mask into dx counter
+        movw start, %ax # Load the start binary data into the ax register
+        movw mask, %dx  # Load the value in the lable mask into dx register
         movw %dx, %cx   # copy the value in dx into cx
     loop1:
         movw %cx, %dx   # Reset the dx register 
