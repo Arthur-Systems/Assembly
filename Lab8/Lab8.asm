@@ -35,9 +35,8 @@
         addw %dx, %bx   # Add the current bit into bx
         shlw $1, %cx    # Shift cx left by 1 to get the next bit
         jmp loop1       # Go back to loop1
-
-done:
-        movw $0, %ax    # Clears ax
+    done:
+        nop             # no operation
         nop             # no operation
 
 
