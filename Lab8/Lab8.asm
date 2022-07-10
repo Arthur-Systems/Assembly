@@ -2,63 +2,60 @@
 # @file Lab8.asm
  # @author Arthur Wei  
  # @version Lab 8
- # @date 2022-06-30
+ # @date 2022-07-09
 
- # @brief This file is the implementation of the Stack class.
+ # @brief This program transfers binary data from one register to another one by one. 
 
-# ! Registers
-# ax
-# bx
-# cx 
-# dx
+# ! Register Use List
+# ax - ax is the source register where the start binary data is stored. It will later be copyed to the destination register
+# bx - bx is the destination register where the binary data will be stored.
+# cx - cx is the counter register. It will be shifted to the left by 1 bit each loop to point to each bit in the ax register. 
+# dx - dx is the temporary register used to run and store the value of the AND operation of the dx register and the ax register.
 
 .data     # Define Variables
     start:
         .word 0b1010101010101010
+    mask: 
+        .word 0b1
 
 .text 
     .globl _main
      
     _main:
         movw start, %ax # Load start into ax
-        # not %ax         # Invert ax
-        movw %ax, %cx   # Copy the value of ax to cx
-        movw $1, %dx    # Load 1 into dx counter
-    count:
-        cmp %ax,0       # Compare ax and dx
-        jne counter     # If not equal, jump to loop2
-        je Reseter        # If equal, jump to loop4
-    loop1: 
-        jmp loop2    # jump to loop2
-    counter:
-        shrw $1, %ax    # Shift ax left by 1
-        incw %dx         # Increment dx
-        jmp loop1       # Jump to loop1
-    Reseter:
-        movw %cx, %ax   # Copy the value of cx to ax
-        incw %cx
-        subw %cx, %dx # Subtract cx from dx
-        jmp loop1
-    loop2: 
-        decw %dx
-        shrw (%dx), %ax  
-        movw %dx, %cx
-        shlw (%cx), %ax
-        addw %ax, %bx
-        jmp loop2       # Jump to loop1
-        jmp done
-      
+        movw mask, %dx  # Load the value in the lable mask into dx counter
+        movw %dx, %cx   # copy the value in dx into cx
+    loop1:
+        movw %cx, %dx   # Reset the dx register 
+        andw %ax, %dx   # AND dx with ax
+        cmpw %bx, %ax   # Compare ax with bx
+        jne shift       # If not equal, jump to shift 
+        jmp done        # Else, jump to done
+    shift:
+        addw %dx, %bx   # Add the current bit into bx
+        shlw $1, %cx    # Shift cx left by 1 to get the next bit
+        jmp loop1       # Go back to loop1
 
 done:
-        movw $0, %ax    # Load 0 into ax
-        nop
-        ret             # Return
+        movw $0, %ax    # Clears ax
+        nop             # no operation
 
 
 
 
-
-
-
+# Program output
+#
+# Breakpoint 1 at 0x401020
+# (gdb) r
+# (gdb) p /t $ax
+# $1 = 1010101010101010
+# (gdb) p /t $bx
+# $2 = 0
+# (gdb) c
+# (gdb) p /t $ax
+# $1 = 0
+# (gdb) p /t $bx
+# $2 = 1010101010101010
+# (gdb) q
 
 
