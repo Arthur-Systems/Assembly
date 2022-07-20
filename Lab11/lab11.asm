@@ -1,4 +1,17 @@
-.section .data
+# @author Arthur Wei  
+# @version Lab 11
+# @date 2022-07-14
+
+# @brief This file is the implementation of the Stack class.
+
+# ! Register use list:
+
+# eax: This register is used to store the string to be printed. It will be increased if the string hasn't ended. 
+# ebx: Not used in this program except as system call stdout discriptor.
+# ecx: This register is mostly used to print the string in the system call. It will recopy its value to eax to be rerun again.
+# edx: edx is not really used in the program except as the number of bytes to write.
+
+.section .data             # data section
     .equ STDIN,0 
     .equ STDOUT,1  
     .equ READ,0 
@@ -6,46 +19,31 @@
     .equ EXIT,1
     .equ SUCCESS,0
 
-string:
-    .asciz "hello, wor1d\n"
-    .asciz "hello, wor1d\n"
+    string:                # string section
+        .asciz "hello, wor1d\n"
 
-Write:
-    movl %ecx, %ecx  # Hello world string
-    movl $WRITE, %eax   # System call number 4
-    movl $STDOUT, %ebx  # stdout has descriptor
-    movl %edx, %edx     # String length
-    int $0X80
-    ret
-
-
-.section .text
+.section .text             # text section (executable code) 
     .globl _start
-_start:
-        movl $string, %eax
+    _start:
+        movl $string, %eax # load the string into eax
     loop1:
-
-        movl 13(%eax), %esi
-        mov (%esi), %dl
-        movl $0, %edi
-        mov (%edi), %cl
-        cmp %cl, %dl
-        # cmpsd
-        jne shift
-        jmp done
-        call Write
-        jmp done
-    loop2:
-        inc %edx
-        inc %eax
-        jmp loop1
-    shift:
-        shll $7, %eax
-        jmp loop2
+        cmpb $0, (%eax)    # compare the current byte of the string with 0
+        jne Write          # if not equal, jump to the Write function
+        jmp done           # if equal, jump to done
+    increase:
+        inc %eax           # increase the pointer to the string
+    Write:
+        movl %eax, %ecx    # copy the pointer to ecx
+        movl $WRITE, %eax  # System call number 4
+        movl $STDOUT, %ebx # stdout has descriptor
+        movl $1, %edx      # number of bytes to write
+        int $0X80          # System call
+        movl %ecx, %eax    # Restore pointer
+        jmp increase       # jump to the function that increases the pointer
     done:
-        movl $EXIT, %eax
-        movl $SUCCESS, %ebx
-        int $0X80
+        movl $EXIT, %eax    # System call number 1
+        movl $SUCCESS, %ebx # exit status
+        int $0X80           # System call
 
      
         

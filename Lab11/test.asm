@@ -1,5 +1,5 @@
 
-.section .data
+.data
     .equ STDIN,0 
     .equ STDOUT,1 
     .equ READ,0 
@@ -12,6 +12,7 @@
 
     string_end:
     .equ len, string_end - string
+    
     Write:
         movl $WRITE, %eax
         movl $STDOUT, %ebx
@@ -23,8 +24,7 @@
         movl $EXIT, %eax
         movl $SUCCESS, %ebx
         int $0X80
-
-.section .text 
+.text 
     .globl _start
     _start:
        

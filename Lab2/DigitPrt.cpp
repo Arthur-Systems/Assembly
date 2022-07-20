@@ -24,7 +24,7 @@ void splitNumber(int number)
         digits++;
     }
 
-    for (int temp; digits > 0; digits--)
+    for (double temp; digits > 0; digits--)
     {
 
         temp = pow(10, digits - 1);
