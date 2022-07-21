@@ -6,21 +6,29 @@
     .equ EXIT,1
     .equ SUCCESS,0
 
-    prompt:
-        .ascii "Type Int: "
-        .byte 10
+    prompt_start:
+        .ascii "Input(Int): "
 
+    prompt_count:
+        .equ START, . - prompt_start
+        
     prompt_end:
         .ascii "Converted:"
-        .byte 10
-   
-    number:
-        .ascii "  "
-        .byte 10
+
+    prompt_count_end:
+        .equ END, . - prompt_end
 
     buffer:
         .ascii "  "
         .byte 10
+
+    number:
+        .long 0
+
+    endnum:
+        .long 0
+
+  
 
     read:
         movl  $READ,  %eax
@@ -34,19 +42,58 @@
         movl  $WRITE,  %eax
         movl  $STDOUT, %ebx
         # movl  $number, %ecx
-        movl  $LENGTH, %edx
+        # movl  $LENGTH, %edx
         int   $0X80
         ret
 
-    converttoint:
+    userinput:
+        call read
+        movl $buffer, %eax      # copy buffer to the eax register    
+        movl $0, %edx           # reset edx to 0
+        call countchar 
+        ret
 
-# counts the number of characters in any given string. 
-    countchar: 
-        cmpb $10, (%eax)
+    converttoint:
+        movl %eax, %ecx         # copy eax to ecx
+        movl $0, %eax           # reset eax to 0 
+        movl %edx, %ebx         # copy edx to ebx
+        decl %ebx
+        jmp up
+
+        math1:
+            subb $48, (%ecx)    # subtract 48 from the character
+            mull %ecx
+            addl %eax, endnum
+            # movl %ebx, %edx
+            # decl %ebx
+            # movl %edx, %ebx     # copy edx to number
+            incl %ecx
+            movl $1, %eax
+            cmpl $0, %ebx
+            jne math2 
+            je return
+        up: 
+            movl $1, %eax
+            jmp math2
+        math2:
+            cmpl $0, %ebx        # check if edx is 0
+            jne multiply           
+            je math1
+        multiply:
+            movl $10, %edx
+            mull %edx
+            decl %ebx
+            jmp math2
+
+        return:
+            ret
+
+    countchar:  # counts the number of characters in any given string. 
+        cmpb $10, (%ecx)
         jne increase
         ret
         increase:
-            inc %eax
+            inc %ecx
             inc %edx
             jmp countchar
 
@@ -58,17 +105,18 @@
 .text
     .globl _start
     _start:
-
-    movl $prompt,%ecx
-    call countchar
-
-    call write
-
-    call read
-
-    movl $buffer,%ecx
-   
-    call write
+        movl $prompt_start,%ecx
+        movl  $START, %edx
+        call write
+        call userinput
+        call converttoint
+        movl $prompt_end,%ecx
+        movl $END, %edx
+        # movl %eax, %ecx
+        call write
+        movl $endnum,%ecx
+        movl  $3, %edx
+        call write
 
    # mov (%ecx), $number
 
