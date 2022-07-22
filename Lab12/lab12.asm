@@ -28,6 +28,9 @@
     endnum:
         .long 0
 
+    ten:
+        .byte 10
+
   
 
     read:
@@ -57,35 +60,37 @@
         movl %eax, %ecx         # copy eax to ecx
         movl $0, %eax           # reset eax to 0 
         movl %edx, %ebx         # copy edx to ebx
-        decl %ebx
-        jmp up
+        jmp math1
 
-        math1:
-            subb $48, (%ecx)    # subtract 48 from the character
-            mull %ecx
-            addl %eax, endnum
+    math1: 
+        subb $48, (%ecx)    # subtract 48 from the character
+        addb (%ecx), %al    #
+        inc %ecx
             # movl %ebx, %edx
-            # decl %ebx
-            # movl %edx, %ebx     # copy edx to number
-            incl %ecx
-            movl $1, %eax
-            cmpl $0, %ebx
-            jne math2 
-            je return
-        up: 
-            movl $1, %eax
-            jmp math2
-        math2:
-            cmpl $0, %ebx        # check if edx is 0
-            jne multiply           
-            je math1
-        multiply:
-            movl $10, %edx
-            mull %edx
-            decl %ebx
-            jmp math2
+        decl %ebx
+            # movl %edx, %ebx    # copy edx to number
+            # movl $1, %eax
+        cmpl $0, %ebx
+        jne multiply
+        je return
+    multiply:
+        mulb ten            #
+        jmp math1
 
+       # up: 
+       #     movl $1, %eax
+       #     jmp math2
+       # math2:x
+       #     cmpl $0, %ebx        # check if edx is 0
+       #     jne multiply           
+       #     je math1
+       # multiply:
+       #     movl $10, %edx
+       #     mull %edx
+       #     decl %ebx
+       #     jmp math2
         return:
+            movl %eax, endnum
             ret
 
     countchar:  # counts the number of characters in any given string. 
@@ -99,6 +104,7 @@
 
     exit:
         movl $EXIT,%eax
+        movl $SUCCESS,%ebx
         int $0x80
         
         
@@ -112,16 +118,11 @@
         call converttoint
         movl $prompt_end,%ecx
         movl $END, %edx
-        # movl %eax, %ecx
         call write
-        movl $endnum,%ecx
-        movl  $3, %edx
+        movl $endnum, %eax
+        movl (%eax),%ecx
+        movl  $5, %edx
         call write
-
-   # mov (%ecx), $number
-
-   
-
 done:
     call exit
 
