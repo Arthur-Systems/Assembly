@@ -54,7 +54,6 @@
         cmpb $10, (%ecx)        # compare the value at the current pointer in ecx to 10
         jne increase            # if its not equal, jump to increase
         je converttoint         # if equal, jump to convert to int
-
     increase:                   
         inc %ecx                # incrase the pointer in ecx
         inc %edx                # increase edx %edx: Will be the counter of the program so the program knows how long the input is and knows when to terminate

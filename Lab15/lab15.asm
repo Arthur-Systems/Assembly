@@ -21,7 +21,7 @@
         .equ END, . - prompt_end
 
     buffer:
-        .ascii "  " 
+        .ascii "  "
         .byte 10
 
     number:
@@ -121,6 +121,9 @@
         call write
         call userinput
         call converttoint
+        movl $prompt_end,%ecx
+        movl $END, %edx
+        call write
         movl $endnum, %ecx
         movl (%ecx), %eax
 done:
