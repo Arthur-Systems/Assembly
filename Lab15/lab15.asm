@@ -90,6 +90,33 @@
     return:     # part of the convertion function
         movl %eax, endnum
         ret
+    
+    converttochar:
+    # Registers being replaced: %eax, %ebx, %ecx, %edx
+    # register use list:
+    # %eax: 
+    # %ebx: 
+    # %ecx: 
+    
+    movl %ecx, %eax
+    movl $0, %ebx
+
+
+
+    ret
+
+
+    countint:
+    movl %eax, %ecx  # copy the user input into to the ecx register
+    movl $0, %edx     # reset eax to 0
+    increase:
+    idiv ten        # divide by 10
+    inc %edx        # increase edx
+    cmpl $0, %edx   # compare edx to 0
+    jne increase    # if not equal, jump to increase
+    ret
+
+
 
     countchar: # counts the number of characters in any given string. 
     # Registers being replaced: %ecx, %edx
@@ -126,6 +153,8 @@
         call write
         movl $endnum, %ecx
         movl (%ecx), %eax
+        call countchar
+        call converttochar
 done:
     call exit
 
