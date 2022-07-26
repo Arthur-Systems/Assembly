@@ -32,6 +32,8 @@
 
     ten:
         .byte 10
+    POT:
+        .byte 1
 
     write: # write ascii text
      # Registers being replaced: %eax, %ebx, %ecx, %edx
@@ -97,23 +99,31 @@
     # %eax: 
     # %ebx: 
     # %ecx: 
-    
     movl %ecx, %eax
-    movl $0, %ebx
-
-
-
+    movl %edx, %ebx
+    counter:
+    cmpl $0, %edx
+    jne convert
+    je return2
+    convert:
+    divl ten
+    addb $48, (%edx)
+    movl %edx, buffer
+    decl %ebx
+    jmp counter
+    multiply2:
+    mull ten
+    return2:
     ret
-
 
     countint:
     movl %eax, %ecx  # copy the user input into to the ecx register
     movl $0, %edx     # reset eax to 0
-    increase:
-    idiv ten        # divide by 10
+    increase2:
+    divl ten        # divide by 10
     inc %edx        # increase edx
-    cmpl $0, %edx   # compare edx to 0
-    jne increase    # if not equal, jump to increase
+    cmpl $0, %eax   # compare edx to 0
+    jne increase2    # if not equal, jump to increase
     ret
 
 
@@ -155,6 +165,9 @@
         movl (%ecx), %eax
         call countchar
         call converttochar
+        movl $buffer, %ecx
+        movl $END, %edx
+        call write
 done:
     call exit
 
