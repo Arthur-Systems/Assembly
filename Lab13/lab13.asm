@@ -11,7 +11,6 @@ _start:
     call Add
 done:
 nop
-
 Add:
     addl %ebx, %eax
     addl %ecx, %eax

@@ -21,7 +21,7 @@
         .equ END, . - prompt_end
 
     buffer:
-        .ascii "  "
+        .ascii " "
         .byte 10
 
     number:
@@ -33,7 +33,7 @@
     ten:
         .byte 10
     POT:
-        .byte 1
+        .long 10
 
     write: # write ascii text
      # Registers being replaced: %eax, %ebx, %ecx, %edx
@@ -100,33 +100,35 @@
     # %ebx: 
     # %ecx: 
     movl %ecx, %eax
-    movl %edx, %ebx
+    movl $0, %ecx 
     counter:
-    cmpl $0, %edx
+    cmpl $0, %ebx
     jne convert
     je return2
     convert:
-    divl ten
-    addb $48, (%edx)
-    movl %edx, buffer
+    movl $0, %edx       # reset edx to 0
+    divl POT
+    movl $buffer, %ecx
+    movb %dl, (%ecx)
+    addb $48, (%ecx)
+    mod:
+    inc %ecx
     decl %ebx
     jmp counter
-    multiply2:
-    mull ten
     return2:
+    movl %ecx, buffer
     ret
 
     countint:
-    movl %eax, %ecx  # copy the user input into to the ecx register
-    movl $0, %edx     # reset eax to 0
+    movl %eax, %ecx             # copy the user input into to the ecx register
+    movl $0, %ebx               # reset eax to 0
     increase2:
-    divl ten        # divide by 10
-    inc %edx        # increase edx
-    cmpl $0, %eax   # compare edx to 0
-    jne increase2    # if not equal, jump to increase
+    movl $0, %edx               # reset eax to 0
+    divl POT                    # divide by 10
+    inc %ebx                    # increase edx
+    cmpl $0, %eax               # compare edx to 0
+    jne increase2               # if not equal, jump to increase
     ret
-
-
 
     countchar: # counts the number of characters in any given string. 
     # Registers being replaced: %ecx, %edx
@@ -158,16 +160,27 @@
         call write
         call userinput
         call converttoint
+        movl $endnum, %ecx
+        movl (%ecx), %eax
+        call countint
+        call converttochar
         movl $prompt_end,%ecx
         movl $END, %edx
         call write
-        movl $endnum, %ecx
-        movl (%ecx), %eax
-        call countchar
-        call converttochar
-        movl $buffer, %ecx
-        movl $END, %edx
+        movl $buffer, %eax
+    Looping:
+        cmpb $10, (%eax)    # compare the current byte of the string with 0
+        jne Write          # if not equal, jump to the Write function
+        jmp done           # if equal, jump to done
+    Up:
+        inc %eax           # increase the pointer to the string
+        jmp Looping
+    Write:
+        movl %eax, %ecx    # copy the pointer to ecx
+        movl $1, %edx
         call write
+        movl %ecx, %eax    # Restore pointer
+        jmp Up
 done:
     call exit
 

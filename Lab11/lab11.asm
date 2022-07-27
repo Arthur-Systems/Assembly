@@ -2,8 +2,6 @@
 # @version Lab 11
 # @date 2022-07-14
 
-# @brief This file is the implementation of the Stack class.
-
 # ! Register use list:
 
 # eax: This register is used to store the string to be printed. It will be increased if the string hasn't ended. 
@@ -32,6 +30,7 @@
         jmp done           # if equal, jump to done
     increase:
         inc %eax           # increase the pointer to the string
+        jmp loop1
     Write:
         movl %eax, %ecx    # copy the pointer to ecx
         movl $WRITE, %eax  # System call number 4
