@@ -23,6 +23,9 @@
     buffer:
         .ascii " "
         .byte 10
+    
+    convertednum:
+        .ascii " "
 
     number:
         .long 0
@@ -101,22 +104,33 @@
     # %ecx: 
     movl %ecx, %eax
     movl $0, %ecx 
+    movl $buffer, %ecx  # copy the buffer to ecx
     counter:
     cmpl $0, %ebx
     jne convert
-    je return2
+    movl $0, %eax
+    movl $convertednum, %eax
+    je flip
     convert:
     movl $0, %edx       # reset edx to 0
     divl POT
-    movl $buffer, %ecx
+    addb $48, %dl
     movb %dl, (%ecx)
-    addb $48, (%ecx)
-    mod:
     inc %ecx
     decl %ebx
     jmp counter
+    flip:
+    movb $0, %dl
+    decl %ecx
+    movb (%ecx), %dl
+    movb %dl, (%eax)
+    inc %eax
+    inc %ebx
+    cmpl $4, %ebx
+    jne flip
+    je return2
     return2:
-    movl %ecx, buffer
+    subl %ebx, %eax
     ret
 
     countint:
@@ -167,9 +181,9 @@
         movl $prompt_end,%ecx
         movl $END, %edx
         call write
-        movl $buffer, %eax
+        movl $convertednum, %eax
     Looping:
-        cmpb $10, (%eax)    # compare the current byte of the string with 0
+        cmpb $0, (%eax)    # compare the current byte of the string with 0
         jne Write          # if not equal, jump to the Write function
         jmp done           # if equal, jump to done
     Up:
