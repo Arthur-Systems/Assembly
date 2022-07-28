@@ -3,19 +3,21 @@
 
 using namespace std;
 
-int userInput();
-int main(){
+string userInput();
 
-cout<<"Input(int): ";
+int main()
+{
 
-
-
-
+    cout << "Input(Int): ";
+    string input = userInput();
+    int inputInt = stoi(input);
+    string string = to_string(inputInt);
+    cout << "converted: " << string << endl;
 }
 
-int userInput(){
-string input;
-cin>>input;
-
+string userInput()
+{
+    string input;
+    cin >> input;
+    return input;
 }
-

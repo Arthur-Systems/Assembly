@@ -126,14 +126,14 @@
     movb %dl, (%eax)
     inc %eax
     inc %ebx
-    cmpl $4, %ebx
+    cmpl $3, %ebx
     jne flip
     je return2
     return2:
     subl %ebx, %eax
     ret
 
-    countint:
+    countint: # count the number of numbers in the user input
     movl %eax, %ecx             # copy the user input into to the ecx register
     movl $0, %ebx               # reset eax to 0
     increase2:
@@ -195,8 +195,8 @@
         call write
         movl %ecx, %eax    # Restore pointer
         jmp Up
-done:
-    call exit
+    done:
+        call exit
 
 
 
