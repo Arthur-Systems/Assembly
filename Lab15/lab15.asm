@@ -1,3 +1,7 @@
+# @author Arthur Wei  
+# @version Lab 15
+# @date 2022-07-28
+
 # a register use list is listed for each subrutine below.
 
 .data             # data section
@@ -56,6 +60,11 @@
         int   $0X80             # syscall
         ret                     # return 
 
+    exit: # exit the program
+        movl $EXIT,%eax
+        movl $SUCCESS,%ebx
+        int $0x80
+
     userinput:
     # Registers being replaced: %eax, %edx
     # register use list:
@@ -99,27 +108,29 @@
     converttochar:
     # Registers being replaced: %eax, %ebx, %ecx, %edx
     # register use list:
-    # %eax: 
-    # %ebx: 
-    # %ecx: 
+    # %eax: is used to store the devided number so its cleared and not used
+    # %ebx: is used as the counter. If ebx is 0, then the loop is stopped
+    # %ecx: ecx is used to store the number to be devided and is minnipulated
+    # %edx: edx or (dl) is used to store the remainder witch will be used to get the ascii value
+
     movl %ecx, %eax
     movl $0, %ecx 
-    movl $buffer, %ecx  # copy the buffer to ecx
-    counter:
+    movl $buffer, %ecx  
+    counter:            # comareative statement to see if the program has run though the loop enough time 
     cmpl $0, %ebx
     jne convert
     movl $0, %eax
     movl $convertednum, %eax
     je flip
-    convert:
-    movl $0, %edx       # reset edx to 0
+    convert:            # takes the number in ecx and take it digit by digit then adding 48 bytes to it to get the ascii 
+    movl $0, %edx       
     divl POT
     addb $48, %dl
     movb %dl, (%ecx)
     inc %ecx
     decl %ebx
     jmp counter
-    flip:
+    flip:           # due to the fact i used the REMAINDER of the division to get the ascii, i had to flip the order of the digits
     movb $0, %dl
     decl %ecx
     movb (%ecx), %dl
@@ -129,7 +140,7 @@
     cmpl $3, %ebx
     jne flip
     je return2
-    return2:
+    return2:    # resets the pointer to the beginning of the buffer and returns the converted number
     subl %ebx, %eax
     ret
 
@@ -160,10 +171,7 @@
         jmp countchar           # jump to countchar
 
 
-    exit: # exit the program
-        movl $EXIT,%eax
-        movl $SUCCESS,%ebx
-        int $0x80
+
         
         
 .text
@@ -182,7 +190,7 @@
         movl $END, %edx
         call write
         movl $convertednum, %eax
-    Looping:
+    Looping:                # looping statement to print the converted number letter by letter
         cmpb $0, (%eax)    # compare the current byte of the string with 0
         jne Write          # if not equal, jump to the Write function
         jmp done           # if equal, jump to done
@@ -198,5 +206,12 @@
     done:
         call exit
 
-
+# Docment Run:
+# arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
+# Input(Int): 123
+# Converted:123arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
+# Input(Int): 647
+# Converted:647arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
+# Input(Int): 56
+# Converted:56:
 
