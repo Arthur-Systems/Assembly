@@ -8,18 +8,6 @@
     .equ EXIT,1
     .equ SUCCESS,0
 
-    prompt_start:
-        .ascii "Input(Int): "
-
-    prompt_count:
-        .equ START, . - prompt_start
-        
-    prompt_end:
-        .ascii "Converted:"
-
-    prompt_count_end:
-        .equ END, . - prompt_end
-
     buffer:
         .ascii "  " 
         .byte 10
@@ -32,6 +20,37 @@
 
     ten:
         .byte 10
+
+    EOL:
+        .ascii "\n"
+
+    prompt_start:
+        .ascii "Input(Int): "
+
+    prompt_count:
+        .equ START, . - prompt_start
+        
+    prompt_end:
+        .ascii "Converted:"
+
+    prompt_count_end:
+        .equ END, . - prompt_end
+
+.text
+    .globl _start
+    _start:
+        movl $prompt_start,%ecx
+        movl $START, %edx
+        call write
+        call userinput
+        call converttoint
+        movl $endnum, %ecx
+        movl (%ecx), %eax
+    done:
+        call EOP           # call the EOP function
+        call exit
+
+
 
     write: # write ascii text
      # Registers being replaced: %eax, %ebx, %ecx, %edx
@@ -111,20 +130,4 @@
         movl $EXIT,%eax
         movl $SUCCESS,%ebx
         int $0x80
-        
-        
-.text
-    .globl _start
-    _start:
-        movl $prompt_start,%ecx
-        movl $START, %edx
-        call write
-        call userinput
-        call converttoint
-        movl $endnum, %ecx
-        movl (%ecx), %eax
-done:
-    call exit
-
-
 

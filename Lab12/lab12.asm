@@ -29,7 +29,7 @@
         .long 0
 
     ten:
-        .byte 10                
+        .long 10                
 
 .text
     .globl _start
@@ -47,40 +47,22 @@
         movl  $buffer, %ecx     # %ecx: Output is put into buffer   %ecx:contains the input of the user 
         movl  $5, %edx          # %edx: The Maxium characters it will accept
         int   $0X80             # syscall
-        movl $buffer, %eax      # copy the input into the eax register  %eax:contains the input of the user 
-        movl $0, %edx           # reset edx to 0
-
-    countchar:                  # counts the number of characters in any given string. 
-        cmpb $10, (%ecx)        # compare the value at the current pointer in ecx to 10
-        jne increase            # if its not equal, jump to increase
-        je converttoint         # if equal, jump to convert to int
-    increase:                   
-        inc %ecx                # incrase the pointer in ecx
-        inc %edx                # increase edx %edx: Will be the counter of the program so the program knows how long the input is and knows when to terminate
-        jmp countchar           # jump to countchar
-
-    converttoint:               # converts ascii to int
-        movl %eax, %ecx         # copy eax to ecx
         movl $0, %eax           # reset eax to 0
-        movl %edx, %ebx         # copy edx to ebx
-        movl $0, %edx           # reset edx to 0
-        jmp math1               # jump to math1
-
-    math1:
-        subb $48, (%ecx)        # subtract 48 bytes from the value in ecx 
-        addb (%ecx), %al        # add the current value in ecx to al 
-        inc %ecx                # increase eax
-        decl %ebx               # decrease ebx 
-        cmpl $0, %ebx           # compare ebx to 0
-        jne multiply            # if not equal, jump to multiply
-        je return               # if euqal, jump to return
-    multiply:
-        mulb ten                # multiply by 10 
-        jmp math1               # jump to math
-
+        movl $0, %ebx           # reset eax to 0
+        decl %ecx
+    
+    converttoint:               # converts ascii to int
+        inc %ecx
+        movb (%ecx), %bl   
+        cmpb $10, %cl           # compare the value at the current pointer in ecx to 10
+        je return
+        subb $48, %bl
+        mull ten
+        addl %ebx, %eax
+        jmp converttoint
     return:
+    
         movl %eax, endnum       # move eax to endnum  
-        jmp done                # jump to done
     done:
         movl $EXIT,%eax        # safely exit
         movl $SUCCESS,%ebx

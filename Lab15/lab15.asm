@@ -23,6 +23,9 @@
 
     prompt_count_end:
         .equ END, . - prompt_end
+    
+    EOL:
+        .ascii "/n"
 
     buffer:
         .ascii " "
@@ -41,6 +44,37 @@
         .byte 10
     POT:
         .long 10
+        
+.text
+    .globl _start
+    _start:
+        movl $prompt_start,%ecx
+        movl $START, %edx
+        call write
+        call userinput
+        call converttoint
+        movl $endnum, %ecx
+        movl (%ecx), %eax
+        call countint
+        call converttochar
+        movl $prompt_end,%ecx
+        movl $END, %edx
+        call write
+        call loopwrite
+        jmp done
+    done:
+        call EOP           # call the EOP function
+        
+        call exit
+
+# Docment Run:
+# arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
+# Input(Int): 123
+# Converted:123arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
+# Input(Int): 647
+# Converted:647arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
+# Input(Int): 56
+# Converted:56:
 
     write: # write ascii text
      # Registers being replaced: %eax, %ebx, %ecx, %edx
@@ -64,6 +98,7 @@
         movl $EXIT,%eax
         movl $SUCCESS,%ebx
         int $0x80
+
 
     userinput:
     # Registers being replaced: %eax, %edx
@@ -113,47 +148,47 @@
     # %ecx: ecx is used to store the number to be devided and is minnipulated
     # %edx: edx or (dl) is used to store the remainder witch will be used to get the ascii value
 
-    movl %ecx, %eax
-    movl $0, %ecx 
-    movl $buffer, %ecx  
+        movl %ecx, %eax
+        movl $0, %ecx 
+        movl $buffer, %ecx  
     counter:            # comareative statement to see if the program has run though the loop enough time 
-    cmpl $0, %ebx
-    jne convert
-    movl $0, %eax
-    movl $convertednum, %eax
-    je flip
+        cmpl $0, %ebx
+        jne convert
+        movl $0, %eax
+        movl $convertednum, %eax
+        je flip
     convert:            # takes the number in ecx and take it digit by digit then adding 48 bytes to it to get the ascii 
-    movl $0, %edx       
-    divl POT
-    addb $48, %dl
-    movb %dl, (%ecx)
-    inc %ecx
-    decl %ebx
-    jmp counter
+        movl $0, %edx       
+        divl POT
+        addb $48, %dl
+        movb %dl, (%ecx)
+        inc %ecx
+        decl %ebx
+        jmp counter
     flip:           # due to the fact i used the REMAINDER of the division to get the ascii, i had to flip the order of the digits
-    movb $0, %dl
-    decl %ecx
-    movb (%ecx), %dl
-    movb %dl, (%eax)
-    inc %eax
-    inc %ebx
-    cmpl $3, %ebx
-    jne flip
-    je return2
+        movb $0, %dl
+        decl %ecx
+        movb (%ecx), %dl
+        movb %dl, (%eax)
+        inc %eax
+        inc %ebx
+        cmpl $3, %ebx
+        jne flip
+        je return2
     return2:    # resets the pointer to the beginning of the buffer and returns the converted number
-    subl %ebx, %eax
-    ret
+        subl %ebx, %eax
+        ret
 
     countint: # count the number of numbers in the user input
-    movl %eax, %ecx             # copy the user input into to the ecx register
-    movl $0, %ebx               # reset eax to 0
+        movl %eax, %ecx             # copy the user input into to the ecx register
+        movl $0, %ebx               # reset eax to 0
     increase2:
-    movl $0, %edx               # reset eax to 0
-    divl POT                    # divide by 10
-    inc %ebx                    # increase edx
-    cmpl $0, %eax               # compare edx to 0
-    jne increase2               # if not equal, jump to increase
-    ret
+        movl $0, %edx               # reset eax to 0
+        divl POT                    # divide by 10
+        inc %ebx                    # increase edx
+        cmpl $0, %eax               # compare edx to 0
+        jne increase2               # if not equal, jump to increase
+        ret
 
     countchar: # counts the number of characters in any given string. 
     # Registers being replaced: %ecx, %edx
@@ -170,30 +205,18 @@
         inc %edx                # increase edx %edx: Will be the counter of the program so the program knows how long the input is and knows when to terminate
         jmp countchar           # jump to countchar
 
-
-
-        
-        
-.text
-    .globl _start
-    _start:
-        movl $prompt_start,%ecx
-        movl $START, %edx
+    EOP:
+        movl $EOL, %edx
+        movl $1, %ecx
         call write
-        call userinput
-        call converttoint
-        movl $endnum, %ecx
-        movl (%ecx), %eax
-        call countint
-        call converttochar
-        movl $prompt_end,%ecx
-        movl $END, %edx
-        call write
+        ret
+
+    loopwrite:
         movl $convertednum, %eax
     Looping:                # looping statement to print the converted number letter by letter
         cmpb $0, (%eax)    # compare the current byte of the string with 0
         jne Write          # if not equal, jump to the Write function
-        jmp done           # if equal, jump to done
+        jmp RET           # if equal, jump to done
     Up:
         inc %eax           # increase the pointer to the string
         jmp Looping
@@ -203,15 +226,10 @@
         call write
         movl %ecx, %eax    # Restore pointer
         jmp Up
-    done:
-        call exit
+    RET:
+        ret
+    
 
-# Docment Run:
-# arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
-# Input(Int): 123
-# Converted:123arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
-# Input(Int): 647
-# Converted:647arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
-# Input(Int): 56
-# Converted:56:
 
+
+        
