@@ -1,8 +1,8 @@
 # Register Use List:
-# eax: Besides for the input and write syscalls eax is mostly used storage space for input then it is used to store the final output
-# ebx: ebx is used as the counter for the program. 
-# ecx: ecx is used to store the and mininpulate ascii data.  
-# edx:  edx is ALSO used as the counter for the program but gets cleared so it needs ebx to step in. 
+# eax: eax is only used for multication and storing the result.
+# ebx: ebx (bl) is used for storing each byte of ecx.
+# ecx: ecx is used to store the user inputted ascii number. 
+# edx: edx is only used for the syscalls.  
 
 .data             # data section
     .equ STDIN,0 
@@ -37,7 +37,7 @@
     write: # write ascii text
         movl  $WRITE,  %eax    # %eax: Moves the write syscall into eax
         movl  $STDOUT, %ebx    # %ebx: Moves STDOUT 
-        movl $prompt_start,%ecx    # %ecx: moves the length into ecx
+        movl  $prompt_start,%ecx    # %ecx: moves the length into ecx
         movl  $START, %edx      # %edx: moves the text being written into edx
         int   $0X80             # syscall
 
@@ -51,20 +51,19 @@
         movl $0, %ebx           # reset eax to 0
         decl %ecx
     
-    converttoint:               # converts ascii to int
+    converttoint:                # converts ascii to int
         inc %ecx
         movb (%ecx), %bl   
-        cmpb $10, %cl           # compare the value at the current pointer in ecx to 10
+        cmpb $10, (%ecx)         # compare the byte at the current location of the pointer at ecx to 10
         je return
-        subb $48, %bl
-        mull ten
+        subb $48, %bl            # subtract 48 bytes from the byte in ecx to get the int value of the ascii number
+        mull ten                 # multiply the int value of the ascii number by 10
         addl %ebx, %eax
         jmp converttoint
     return:
-    
         movl %eax, endnum       # move eax to endnum  
     done:
-        movl $EXIT,%eax        # safely exit
+        movl $EXIT,%eax         # safely exit
         movl $SUCCESS,%ebx
         int $0x80
 

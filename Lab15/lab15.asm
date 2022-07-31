@@ -25,7 +25,7 @@
         .equ END, . - prompt_end
     
     EOL:
-        .ascii "/n"
+        .ascii "\n"
 
     buffer:
         .ascii " "
@@ -33,15 +33,17 @@
     
     convertednum:
         .ascii " "
+        .byte 0
+        
+    convertedflip:
+        .ascii " "
+        .byte 10
 
     number:
         .long 0
 
     endnum:
         .long 0
-
-    ten:
-        .byte 10
     POT:
         .long 10
         
@@ -53,35 +55,33 @@
         call write
         call userinput
         call converttoint
-        movl $endnum, %ecx
-        movl (%ecx), %eax
         call countint
         call converttochar
         movl $prompt_end,%ecx
         movl $END, %edx
         call write
-        call loopwrite
-        jmp done
+        call loopwrite     # print letter by letter
+        jmp done           # jump to done
     done:
-        call EOP           # call the EOP function
-        
+        call EOP           # prints a new line at the end of the program
         call exit
 
 # Docment Run:
 # arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
 # Input(Int): 123
-# Converted:123arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
+# Converted:123
+# arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
 # Input(Int): 647
-# Converted:647arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
+# Converted:647
+# arthur@DESKTOP-KJAD1M1:~/Assembly/Lab15$ ./a.out
 # Input(Int): 56
-# Converted:56:
+# Converted:56
 
     write: # write ascii text
      # Registers being replaced: %eax, %ebx, %ecx, %edx
-        movl  $WRITE,  %eax    # %eax: Moves the write syscall into eax
-        movl  $STDOUT, %ebx    # %ebx: Moves STDOUT 
-        # movl   $prompt_start,%ecx    # %ecx: moves the length into ecx
-        # movl  $START, %edx      # %edx: moves the text being written into edx
+        movl  $WRITE,  %eax     # %eax: Moves the write syscall into eax
+        movl  $STDOUT, %ebx     # %ebx: Moves STDOUT 
+        # %ecx %edx: will be passed in exterinally
         int   $0X80             # syscall
         ret                     # return 
 
@@ -92,13 +92,12 @@
         movl  $buffer, %ecx     # %ecx: Output is put into buffer  
         movl  $5, %edx          # %edx: The Maxium characters it will accept 5
         int   $0X80             # syscall
-        ret                     # return 
+        ret                      # return 
 
     exit: # exit the program
         movl $EXIT,%eax
         movl $SUCCESS,%ebx
         int $0x80
-
 
     userinput:
     # Registers being replaced: %eax, %edx
@@ -108,36 +107,39 @@
     # %ecx:  not used
     # %edx: used as counter so cleared 
         call read               # call read function
-        movl %ecx, %eax         # copy the user input into to the eax register 
         movl $0, %edx           # reset edx to 0
-        call countchar          # call countchar function
+        movl $0, %eax           # reset eax to 0
+        movl $0, %ebx           # reset eax to 0
+        decl %ecx
         ret
 
-    converttoint:
-    # Registers being replaced: %eax, %ebx, %ecx, %edx
+    converttoint:                # converts ascii to int
+    # Registers being replaced: %eax, %edx
     # register use list:
-    # %eax: eax is first used to copy the user input to ecx so it can be freed up to use for multiplication
-    # %ebx: ebx is used as the counter for the program 
-    # %ecx: ecx is used to store the user input and is minnipulated
-    # %edx: ed is cleared to be used for the multiplication
-        movl %eax, %ecx         # copy the user input BACK into to the ecx register
-        movl $0, %eax           # reset eax to 0
-        movl %edx, %ebx         # copy edx to ebx
-        movl $0, %edx           # reset edx to 0
-        jmp math1               # jump to math1
-    math1: # part of the convertion function
-        subb $48, (%ecx)        # subtract 48 bytes from the value in ecx 
-        addb (%ecx), %al        # add the current value in ecx to al 
-        inc %ecx                # increase eax
-        decl %ebx               # decrease ebx 
-        cmpl $0, %ebx           # compare ebx to 0
-        jne multiply            # if not equal, jump to multiply
-        je return               # if euqal, jump to return
-    multiply:   # part of the convertion function
-        mulb ten                # multiply by 10 
-        jmp math1               # jump to math
-    return:     # part of the convertion function
-        movl %eax, endnum
+    # eax: eax is only used for multication and storing the result.
+    # ebx: ebx (bl) is used for storing each byte of ecx.
+    # ecx: ecx is used to store the user inputted ascii number. 
+    # edx: edx is only used for the syscalls.  
+        inc %ecx
+        movb (%ecx), %bl   
+        cmpb $10, (%ecx)         # compare the byte at the current location of the pointer at ecx to 10
+        je return
+        subb $48, %bl            # subtract 48 bytes from the byte in ecx to get the int value of the ascii number
+        mull POT                 # multiply the int value of the ascii number by 10
+        addl %ebx, %eax
+        jmp converttoint
+    return:
+        movl %eax, endnum       # move eax to endnum  
+        ret
+
+    countint: # count the number of numbers in the user input
+        movl $0, %ebx               # reset eax to 0
+    increase2:
+        movl $0, %edx               # reset eax to 0
+        divl POT                    # divide by 10
+        inc %ebx                    # increase edx
+        cmpl $0, %eax               # compare edx to 0
+        jne increase2               # if not equal, jump to increase
         ret
     
     converttochar:
@@ -148,15 +150,15 @@
     # %ecx: ecx is used to store the number to be devided and is minnipulated
     # %edx: edx or (dl) is used to store the remainder witch will be used to get the ascii value
 
-        movl %ecx, %eax
-        movl $0, %ecx 
-        movl $buffer, %ecx  
+        movl endnum, %eax
+        movl $convertednum, %ecx 
+        pushl %ebx      # push the counter (ebx) onto the stack so we can save it for later
     counter:            # comareative statement to see if the program has run though the loop enough time 
         cmpl $0, %ebx
         jne convert
         movl $0, %eax
         movl $convertednum, %eax
-        je flip
+        je pushpop
     convert:            # takes the number in ecx and take it digit by digit then adding 48 bytes to it to get the ascii 
         movl $0, %edx       
         divl POT
@@ -165,58 +167,56 @@
         inc %ecx
         decl %ebx
         jmp counter
-    flip:           # due to the fact i used the REMAINDER of the division to get the ascii, i had to flip the order of the digits
+    pushpop:            # push and pop of ebx
+        popl %ebx       # pop the counter (ebx) off the stack
+        pushl %ebx       # push the counter (ebx) onto the stack so we can save it for later
+    flip:               # flip all the bits in the number and store it in eax
+        movl $convertedflip, %ecx   
         movb $0, %dl
-        decl %ecx
-        movb (%ecx), %dl
-        movb %dl, (%eax)
+        decl %ebx
+        movl %ebx, %edx
+        jmp fliploop1
+    fliploop:
+        popl %edx
+        subl %edx, %eax
+        movl %edx, %ebx
+        decl %ebx
+        movl %ebx, %edx
+    fliploop1:
+        cmpl $0, %ebx
+        jle flipcont
         inc %eax
-        inc %ebx
-        cmpl $3, %ebx
-        jne flip
+        decl %ebx
+        jmp fliploop1
+    flipcont:
+        pushl %edx
+        movl $0, %edx
+        movb (%eax), %dl
+        movb %dl, (%ecx)
+        inc %ecx
+        movb convertednum, %bl
+        cmpb %bl, %dl
+        jne fliploop
         je return2
-    return2:    # resets the pointer to the beginning of the buffer and returns the converted number
-        subl %ebx, %eax
+    return2:            # resets the pointer to the beginning and returns the converted number
+        popl %edx
+        popl %ebx
+        subl %ebx, %ecx
         ret
 
-    countint: # count the number of numbers in the user input
-        movl %eax, %ecx             # copy the user input into to the ecx register
-        movl $0, %ebx               # reset eax to 0
-    increase2:
-        movl $0, %edx               # reset eax to 0
-        divl POT                    # divide by 10
-        inc %ebx                    # increase edx
-        cmpl $0, %eax               # compare edx to 0
-        jne increase2               # if not equal, jump to increase
-        ret
+    loopwrite:     # looping statement to print the converted number letter by letter
 
-    countchar: # counts the number of characters in any given string. 
-    # Registers being replaced: %ecx, %edx
+    # Registers being replaced: %eax, %ebx, %ecx, %edx
     # register use list:
-    # %eax: eax is not used
-    # %ebx: ebx is not used
-    # %ecx: ecx is used to store the string being counted and is compared to 10 to count to the end
-    # %edx: edx is the counter for the program and is increased by 1 each time the loop is run
-        cmpb $10, (%ecx)        # compare the value at the current pointer in ecx to 10
-        jne increase            # if its not equal, jump to increase
-        ret                     # if equal, return
-    increase:                   
-        inc %ecx                # incrase the pointer in ecx
-        inc %edx                # increase edx %edx: Will be the counter of the program so the program knows how long the input is and knows when to terminate
-        jmp countchar           # jump to countchar
-
-    EOP:
-        movl $EOL, %edx
-        movl $1, %ecx
-        call write
-        ret
-
-    loopwrite:
-        movl $convertednum, %eax
-    Looping:                # looping statement to print the converted number letter by letter
+    # %eax: Stores the final number to be printed
+    # %ebx: Not used
+    # %ecx: ecx is used for the system call to print the number
+    # %edx: used for syscall
+        movl $convertedflip, %eax
+    Looping:                
         cmpb $0, (%eax)    # compare the current byte of the string with 0
         jne Write          # if not equal, jump to the Write function
-        jmp RET           # if equal, jump to done
+        jmp Return3           # if equal, jump to done
     Up:
         inc %eax           # increase the pointer to the string
         jmp Looping
@@ -226,10 +226,12 @@
         call write
         movl %ecx, %eax    # Restore pointer
         jmp Up
-    RET:
+    Return3:
         ret
-    
 
-
-
+    EOP: # end of program prints a new line
+        movl $1, %edx
+        movl $EOL, %ecx
+        call write
+        ret
         
