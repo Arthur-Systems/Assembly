@@ -1,3 +1,9 @@
+# @author Arthur Wei  
+# @version Lab 17
+# @date 2022-08-01
+
+# a register use list is listed for each subrutine below.
+
 .data             # data section
     .equ STDIN,0 
     .equ STDOUT,1  
@@ -11,6 +17,12 @@
 
     prompt_count_end:
         .equ END, . - prompt_end
+
+    prompt_NOTFOUND:
+        .ascii "The substring was NOT found!"
+
+    prompt_count_NOTFOUND:
+        .equ NOTFOUND, . - prompt_NOTFOUND
 
     EOL:
         .ascii "\n"
@@ -34,34 +46,32 @@
     POT:
         .long 10
 
+    main_string:
+        .ascii "accentuate"
+        .byte 10
 
-main_string:
-    .ascii "accentuate"
-    .byte 10
-substring:
-    .ascii "cent"
-    .byte 10
-
-
-
+    substring:
+        .ascii "ntuate"
+        .byte 10
 .text
     .globl _start
     _start:
-        subl $8, %esp # reserve space for the stack frame
-        movl $main_string, %eax
-        movl %eax, (%esp) # store the number of arguments in the stack frame
-        movl $substring, %eax
-        movl %eax, 4(%esp) 
+        subl $8, %esp                   # reserve 2 space in the stack frame
+        movl $main_string, %eax         # load the main string into %eax
+        movl %eax, (%esp)               # store the main string into the stack frame
+        movl $substring, %eax   
+        movl %eax, 4(%esp)              # store the substring into the stack frame
         movl $0, %eax
-        call find_string
-
+        call find_string                # call the find_string subroutine
+        movl (%esp), %eax               # load the top of the stack into %eax
+        cmpl $-1, %eax
+        je NEGFOUND                     # if the return value is -1,output the error message
         movl $prompt_end,%ecx   
         movl $END, %edx
         call write
         movl (%esp), %eax
         call countint
         call converttochar
-        movl $convertednum, %eax
         call loopwrite     # print letter by letter
         jmp done           # jump to done
     done:
@@ -76,22 +86,33 @@ substring:
         int   $0X80             # syscall
         ret                     # return 
 
-    find_string:
+    find_string:    # find the substring in the main string
+    # Registers being replaced: %eax, %ecx, %edx   
+    # REGISTER %EBX NOT MODIFIED!!!
+    # %eax: holds the mainstring to be compared with the substring
+    # %ecx: holds the substring to be compared with the mainstring and is the pointer that is outputed at the end
+    # %edx: holds each byte of the substring to be compared with the mainstring
+
         pushl %ebp
         movl %esp, %ebp
-        movl 8(%ebp), %eax      
-        movl 12(%ebp), %ecx
+        movl 8(%ebp), %eax          # main_string  
+        movl 12(%ebp), %ecx         # substring
         movb (%ecx), %dl
-        movl $0, %ecx
-
+        movl $1, %ecx           # position in main_string start with 1 (not 0) 
     compare:
         cmpb %dl, (%eax)
-        je pushecx
+        je checknext
         inc %eax
         inc %ecx            # position in main_string
         cmpb $10, (%eax)
-        je returnneg1
-        jmp compare
+        je returnneg
+        jmp compare 
+    checknext:
+        inc %eax
+        cmpb %dl, (%eax)
+        jne pushecx
+        inc %ecx
+        jmp checknext
     pushecx:
         pushl %ecx
         movl 12(%ebp), %ecx
@@ -100,24 +121,33 @@ substring:
         movb (%ecx), %dl
         cmpb $10, %dl
         je return
+        jne foundloop
     foundloop:
-        inc %eax
         cmpb %dl, (%eax)
-        jne return
-        je found
-
+        jne returnneg1
+        je inceax
+    inceax:
+        inc %eax
+        jmp found
+    
     return:
         popl %ecx
         movl %ecx, 8(%ebp)
         popl %ebp
         ret
-    
+    returnneg:
+        movl $-1, 8(%ebp)
+        popl %ebp
+        ret
+
     returnneg1:
+        popl %ecx
         movl $-1, 8(%ebp)
         popl %ebp
         ret
 
     countint: # count the number of numbers in the user input
+        movl %eax, %ecx
         movl $0, %ebx               # reset eax to 0
     increase2:
         movl $0, %edx               # reset eax to 0
@@ -176,9 +206,9 @@ substring:
     # %edx: used for syscall
         movl $convertednum, %eax
     Looping:                
-        cmpb $0, (%eax)    # compare the current byte of the string with 0
-        jne Write          # if not equal, jump to the Write function
-        jmp Return3           # if equal, jump to done
+        cmpb $10, (%eax)    # compare the number to 10 to see if it is done
+        jne Write           # if not equal, jump to the Write function
+        jmp Return3         # if equal, jump to done
     Up:
         inc %eax           # increase the pointer to the string
         jmp Looping
@@ -196,6 +226,13 @@ substring:
         movl $EOL, %ecx 
         call write
         ret
+
+    NEGFOUND:
+        movl $NOTFOUND, %edx
+        movl $prompt_NOTFOUND, %ecx 
+        call write
+        call EOP
+        call exit
 
     exit: # exit the program
         movl $EXIT,%eax
