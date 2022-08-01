@@ -47,8 +47,8 @@ done:
 	
 write: # write ascii text
 # Registers being replaced: %eax, %ebx, %ecx, %edx
-movl $WRITE, %eax # %eax: Moves the write syscall into eax
-movl $STDOUT, %ebx # %ebx: Moves STDOUT
+	movl $WRITE, %eax # %eax: Moves the write syscall into eax
+	movl $STDOUT, %ebx # %ebx: Moves STDOUT
 # %ecx %edx: will be passed in exterinally
 	int $0X80 # syscall
 	ret # return
@@ -71,7 +71,6 @@ converttochar:
 # %ebx: is used as the counter. If ebx is 0, then the loop is stopped
 # %ecx: ecx is used to store the number to be devided and is minnipulated
 # %edx: edx or (dl) is used to store the remainder witch will be used to get the ascii value
-	
 	movl %ecx, %eax
 	movl $0, %ecx
 	movl $buffer, %ecx

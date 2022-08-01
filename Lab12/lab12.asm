@@ -35,17 +35,17 @@ ten:
 	.globl _start
 _start:
 write: # write ascii text
-movl $WRITE, %eax # %eax: Moves the write syscall into eax
-movl $STDOUT, %ebx # %ebx: Moves STDOUT
-movl $prompt_start, %ecx # %ecx: moves the length into ecx
-movl $START, %edx # %edx: moves the text being written into edx
+    movl $WRITE, %eax # %eax: Moves the write syscall into eax
+    movl $STDOUT, %ebx # %ebx: Moves STDOUT
+    movl $prompt_start, %ecx # %ecx: moves the length into ecx
+    movl $START, %edx # %edx: moves the text being written into edx
 	int $0X80 # syscall
 	
 read: # Read user input
-movl $READ, %eax # %eax: Moves the read syscall into eax
-movl $STDIN, %ebx # %ebx: Moves STDIN into ebx
-movl $buffer, %ecx # %ecx: Output is put into buffer %ecx:contains the input of the user
-movl $5, %edx # %edx: The Maxium characters it will accept
+    movl $READ, %eax # %eax: Moves the read syscall into eax    
+    movl $STDIN, %ebx # %ebx: Moves STDIN into ebx
+    movl $buffer, %ecx # %ecx: Output is put into buffer %ecx:contains the input of the user
+    movl $5, %edx # %edx: The Maxium characters it will accept
 	int $0X80 # syscall
 	movl $0, %eax # reset eax to 0
 	movl $0, %ebx # reset eax to 0
