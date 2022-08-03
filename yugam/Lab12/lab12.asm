@@ -1,9 +1,3 @@
-# Register Use List:
-# eax: eax is only used for multication and storing the result.
-# ebx: ebx (bl) is used for storing each byte of ecx.
-# ecx: ecx is used to store the user inputted ascii number.
-# edx: edx is only used for the syscalls.
-	
 	.data # data section
 	.equ STDIN, 0
 	.equ STDOUT, 1

@@ -30,58 +30,55 @@
     .globl _start
     _start:
         call read
-        call clear
-        call intiger
-        call count
-        call converttochar
-        call onebyone     
-        jmp done  
-    done:
-        call exit
-
-
-
-    clear:
         movl $0, %edx
         movl $0, %eax
         movl $0, %ebx
         decl %ecx
-        ret
+        call intiger
+        call count
+        call char
+        call onebyone     
+        jmp done  
+    done:
+        call exit
 
     intiger:
         inc %ecx
         movb (%ecx), %bl   
         cmpb $10, (%ecx)        
         je return
-    convert:
+    mult:
         subb $48, %bl       
         mull multiply             
         addl %ebx, %eax
         jmp intiger
+    return:    
+        ret
 
     count: 
+        movl %eax, %ecx
         movl $0, %ebx          
     increase2:
         movl $0, %edx        
-        divl POT                  
+        divl multiply                  
         inc %ebx               
         cmpl $0, %eax            
         jne increase2             
         ret
     
-    converttochar:
-        movl endnum, %eax
+    char:
+        movl %ecx, %eax
         movl $convertednum, %ecx 
         pushl %ebx     
     counter:
         cmpl $0, %ebx
-        jne convert
+        jne devide
         movl $0, %eax
         movl $convertednum, %eax
         je pushpop
-    convert:
+    devide:
         movl $0, %edx       
-        divl POT
+        divl multiply
         addb $48, %dl
         movb %dl, (%ecx)
         inc %ecx
@@ -117,8 +114,8 @@
         movb convertednum, %bl
         cmpb %bl, %dl
         jne fliploop
-        je return2
-    return2:
+        je returnback
+    returnback:
         popl %edx
         popl %ebx
         subl %ebx, %ecx
@@ -129,7 +126,7 @@
     Looping:                
         cmpb $0, (%eax)
         jne Write
-        jmp Return3
+        jmp RETURN
     Up:
         inc %eax
         jmp Looping
@@ -138,8 +135,9 @@
         call write
         movl %ecx, %eax
         jmp Up
-    Return3:
+    RETURN:
         ret
+
 
     write: 
         movl  $WRITE,  %eax   
@@ -151,7 +149,7 @@
     read: 
         movl  $READ,  %eax   
         movl  $STDIN, %ebx  
-        movl  $buffer, %ecx   
+        movl  $text, %ecx   
         movl  $5, %edx         
         int   $0X80      
         ret               

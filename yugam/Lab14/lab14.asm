@@ -22,7 +22,6 @@
         call read               
         call clear
         call intiger   
-        movl number, %eax
     done:
         call exit   
 
