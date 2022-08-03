@@ -1,6 +1,4 @@
-# a register use list is listed for each subrutine below.
-
-.data             # data section
+.data           
     .equ STDIN,0 
     .equ STDOUT,1  
     .equ READ,3 
@@ -8,45 +6,46 @@
     .equ EXIT,1
     .equ SUCCESS,0
 
-    buffer:
-        .ascii "  " 
+    text:
+        .ascii "  "
         .byte 10
 
     number:
         .long 0
 
-    ten:
-        .byte 10
+    multiply:
+        .long 10
 
 .text          
     .globl _start
     _start:        
         call read               
         call clear
-        decl %ecx     
-        call converttoint   
-        movl endnum, %eax
+        call intiger   
+        movl number, %eax
     done:
-        call exit        
+        call exit   
+
     clear:
         movl $0, %edx          
         movl $0, %eax          
-        movl $0, %ebx  
+        movl $0, %ebx
+        decl %ecx 
 
-    converttoint:
+    intiger:
         inc %ecx
         movb (%ecx), %bl   
         cmpb $10, (%ecx)        
         je return
     convert:
-        subb $48, %bl           
-        mull ten             
+        subb $48, %bl       
+        mull multiply             
         addl %ebx, %eax
-        jmp converttoint
-        
+        jmp intiger
     return:
-        movl %eax, endnum         
+        movl %eax, number         
         ret
+
     exit:
         movl $EXIT,%eax
         movl $SUCCESS,%ebx
@@ -54,7 +53,7 @@
     read: 
         movl  $READ,  %eax     
         movl  $STDIN, %ebx    
-        movl  $buffer, %ecx     
+        movl  $text, %ecx     
         movl  $5, %edx          
         int   $0X80            
         ret         

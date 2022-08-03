@@ -12,13 +12,13 @@
 	.equ EXIT, 1
 	.equ SUCCESS, 0
 	
-buffer:
+buffer: # taken from example
 	.ascii " "
 	.byte 10
 	
-ten:
+multiply:
 	.long 10
-	
+
 	.text
 	.globl _start
 _start:
@@ -27,21 +27,20 @@ _start:
 	movl $buffer, %ecx
 	movl $5, %edx
 	int $0X80
-clear:
 	movl $0, %eax
 	movl $0, %ebx
 	decl %ecx
-converttoint:
+CTI:
 	inc %ecx
 	movb (%ecx), %bl
-	cmpb $10, (%ecx)
+	cmpb $10, %bl
 	je done
 	subb $48, %bl
-	mull ten
-	addl %ebx, %eaxs
-	jmp converttoint
+	mull multiply
+	addl %ebx, %eax
+	jmp CTI
 done:
-	nop # eax should be looked into here
+	nop
 	movl $EXIT, %eax
 	movl $SUCCESS, %ebx
 	int $0x80

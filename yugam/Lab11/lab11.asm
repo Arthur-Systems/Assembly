@@ -13,14 +13,14 @@
     .globl _start
     _start:
         movl $string, %ecx 
-    comparebyte:
+    cmpb:
         cmpb $0, (%ecx)   
-        jne letterbyletter          
+        jne LETTERSEACH          
         je done           
     increase:
         inc %ecx          
         jmp comparebyte
-    letterbyletter:  
+    LETTERSEACH:  
         movl $WRITE, %eax  
         movl $STDOUT, %ebx 
         movl $1, %edx      

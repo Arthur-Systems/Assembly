@@ -47,13 +47,12 @@ POT:
 	.long 10
 	
 main_string:
-	.ascii "acentuate"
+	.ascii "accentuate"
 	.byte 10
 	
 substring:
-	.ascii "ntuate"
+	.ascii "cent"
 	.byte 10
-
 
 	.text
 	.globl _start
@@ -66,7 +65,7 @@ _start:
 	movl $0, %eax
 	call find_string # call the find_string subroutine
 	movl (%esp), %eax # load the top of the stack into %eax
-	cmpl $ - 1, %eax
+	cmpl $1, %eax
 	je NEGFOUND # if the return value is - 1, output the error message
 	movl $prompt_end, %ecx
 	movl $END, %edx
@@ -100,7 +99,7 @@ find_string: # find the substring in the main string
 	movl 8(%ebp), %eax # main_string
 	movl 12(%ebp), %ecx # substring
 	movb (%ecx), %dl
-	movl $1, %ecx # position in main_string start with 1 (not 0)
+	movl $0, %ecx # position in main_string start with 1 (not 0)
 compare:
 	cmpb %dl, (%eax)
 	je checknext
@@ -138,13 +137,13 @@ return:
 	popl %ebp
 	ret
 returnneg:
-	movl $ - 1, 8(%ebp)
+	movl $-1, 8(%ebp)
 	popl %ebp
 	ret
 	
 returnneg1:
 	popl %ecx
-	movl $ - 1, 8(%ebp)
+	movl $-1, 8(%ebp)
 	popl %ebp
 	ret
 	

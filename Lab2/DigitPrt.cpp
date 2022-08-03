@@ -24,10 +24,12 @@ void splitNumber(int number)
         digits++;
     }
 
-    for (double temp; digits > 0; digits--)
+    for (int temp; digits > 0; digits--)
     {
 
-        temp = pow(10, digits - 1);
+        int x = 10;
+        cout << (double)(pow(10, digits - 1));
+
         remainder = number / temp;
         number -= remainder * temp;
         count++;
