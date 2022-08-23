@@ -164,48 +164,14 @@ convert: # takes the number in ecx and take it digit by digit then adding 48 byt
 	divl POT
 	addb $48, %dl
 	movb %dl, (%ecx)
+	call Write
 	inc %ecx
 	decl %ebx
 	jmp counter
-pushpop: # push and pop of ebx
-	popl %ebx # pop the counter (ebx) off the stack
-	pushl %ebx # push the counter (ebx) onto the stack so we can save it for later
-flip: # flip all the bits in the number and store it in eax
-	movl $convertedflip, %ecx
-	movb $0, %dl
-	decl %ebx
-	movl %ebx, %edx
-	jmp fliploop1
-fliploop:
-	popl %edx
-	subl %edx, %eax
-	movl %edx, %ebx
-	decl %ebx
-	movl %ebx, %edx
-fliploop1:
-	cmpl $0, %ebx
-	jle flipcont
-	inc %eax
-	decl %ebx
-	jmp fliploop1
-flipcont:
-	pushl %edx
-	movl $0, %edx
-	movb (%eax), %dl
-	movb %dl, (%ecx)
-	inc %ecx
-	movb convertednum, %bl
-	cmpb %bl, %dl
-	jne fliploop
-	je return2
 return2: # resets the pointer to the beginning and returns the converted number
-	popl %edx
-	popl %ebx
-	subl %ebx, %ecx
 	ret
 	
 loopwrite: # looping statement to print the converted number letter by letter
-	
 # Registers being replaced: %eax, %ebx, %ecx, %edx
 # register use list:
 # %eax: Stores the final number to be printed

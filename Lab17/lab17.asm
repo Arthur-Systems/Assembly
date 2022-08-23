@@ -65,7 +65,7 @@ _start:
 	movl $0, %eax
 	call find_string # call the find_string subroutine
 	movl (%esp), %eax # load the top of the stack into %eax
-	cmpl $1, %eax
+	cmpl $-1, %eax
 	je NEGFOUND # if the return value is - 1, output the error message
 	movl $prompt_end, %ecx
 	movl $END, %edx
